@@ -168,6 +168,71 @@ const Tree = (array) => {
 
 
         },
+
+        levelOrderForEach(callback) {
+            if (typeof callback !== "function") throw Error ("callback is not a function");
+            if (this.root === null) return null;
+
+            let queue = [];
+
+            queue.push(this.root);
+
+            while (queue.length >= 1) {
+                const currentNode = queue.shift();
+
+                callback(currentNode.value);
+
+                if (currentNode.left !== null) {
+                    queue.push(currentNode.left);
+                }
+
+                if (currentNode.right !== null) {
+                    queue.push(currentNode.right);
+                }
+            }
+        },
+
+        inOrderForEach(callback) {
+            if (typeof callback !== "function") throw Error ("callback is not a function");
+
+            function traverse(node) {
+                if (node === null) return;
+
+                traverse(node.left);
+                callback(node.value);
+                traverse(node.right);
+            }
+
+            traverse(this.root);
+        },
+
+        preOrderForEach(callback) {
+            if (typeof callback !== "function") throw Error ("callback is not a function");
+
+            function traverse(node) {
+                if (node === null) return;
+
+                callback(node.value);
+                traverse(node.left);
+                traverse(node.right);
+            }
+
+            traverse(this.root);
+        },
+
+        postOrderForEach(callback) {
+            if (typeof callback !== "function") throw Error ("callback is not a function");
+
+            function traverse(node) {
+                if (node === null) return;
+
+                traverse(node.left);
+                traverse(node.right);
+                callback(node.value);
+            }
+
+            traverse(this.root);
+        },
     }
 }
 
@@ -207,14 +272,16 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
 }
 
-console.log("===== TEST 1: DELETE LEAF =====");
+const tree = Tree([1, 2, 3, 4, 5, 6, 7]);
 
-const tree1 = Tree([1, 2, 3, 4, 5, 6, 7]);
+prettyPrint(tree.root);
 
-console.log("Before:");
-prettyPrint(tree1.root);
+tree.levelOrderForEach((value) => {
+    console.log(value);
+});
 
-tree1.deleteItem(1);
+console.log("----") 
 
-console.log("After deleting 1:");
-prettyPrint(tree1.root);
+tree.inOrderForEach((value) => {
+    console.log(value);
+});
