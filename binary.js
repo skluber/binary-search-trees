@@ -233,6 +233,39 @@ const Tree = (array) => {
 
             traverse(this.root);
         },
+
+        height(value) {
+            let currentNode = this.root;
+
+            while (currentNode !== null) {
+
+                if (currentNode.value === value) {
+
+                    function calculateChilds(node) {
+                        if (node === null) return -1;
+
+                        const leftHeight = calculateChilds(node.left);
+                        const rightHeight = calculateChilds(node.right);
+
+                        return Math.max (leftHeight, rightHeight) + 1;
+                    }
+
+                    return calculateChilds(currentNode);
+
+                } else {
+                    if (currentNode.value > value) {
+                        currentNode = currentNode.left;
+                    } else {
+                        currentNode = currentNode.right;
+                    }
+                }
+            }
+
+            return undefined;
+
+        },
+
+        
     }
 }
 
@@ -272,16 +305,12 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
 }
 
-const tree = Tree([1, 2, 3, 4, 5, 6, 7]);
+const tree = Tree([1, 2, 3, 4, 5, 6, 7,20]);
 
 prettyPrint(tree.root);
 
-tree.levelOrderForEach((value) => {
-    console.log(value);
-});
 
-console.log("----") 
-
-tree.inOrderForEach((value) => {
-    console.log(value);
-});
+console.log("Tamaño de 1: ",tree.height(1));
+console.log("Tamaño de 2: ",tree.height(2));
+console.log("Tamaño de 4: ",tree.height(4));
+console.log("Tamaño de 10: ",tree.height(10));
